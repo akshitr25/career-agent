@@ -1,35 +1,22 @@
-<!DOCTYPE html>
-<html>
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+from agent import get_response
 
-<head>
-  <title>AI Career Planner</title>
-</head>
+app = FastAPI()
 
-<body>
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-  <h2>AI Career Planner</h2>
+@app.get("/")
+def home():
+    return {"message": "AI Agent Running"}
 
-  <input id="goal" placeholder="Enter career goal">
-  <button onclick="send()">Generate Plan</button>
-
-  <pre id="output"></pre>
-
-  <script>
-    async function send() {
-
-      const goal = document.getElementById("goal").value;
-
-      const res = await fetch(
-        `http://127.0.0.1:8000/plan?goal=${goal}`
-      );
-
-      const data = await res.json();
-
-      document.getElementById("output").innerText =
-        data.career_plan;
-    }
-  </script>
-
-</body>
-
-</html>
+@app.get("/ask")
+def ask(q: str):
+    response = get_response(q)
+    return {"response": response}
