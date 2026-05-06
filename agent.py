@@ -1,6 +1,7 @@
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import json
 
 from prompts import SYSTEM_PROMPT
 
@@ -26,4 +27,6 @@ def get_response(user_input):
         ]
     )
 
-    return response.choices[0].message.content
+    return json.loads(
+        response.choices[0].message.content
+    )
