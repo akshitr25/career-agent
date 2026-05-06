@@ -5,6 +5,7 @@
     <title>AI Career Planner</title>
 
     <style>
+
         body {
           font-family: Arial;
           background: #0f172a;
@@ -12,46 +13,59 @@
           padding: 40px;
         }
 
-        h2 {
+        h1 {
           margin-bottom: 20px;
         }
 
         input {
-          padding: 10px;
-          width: 320px;
-          border-radius: 6px;
+          padding: 12px;
+          width: 350px;
+          border-radius: 8px;
           border: none;
           outline: none;
         }
 
         button {
-          padding: 10px 20px;
-          margin-left: 10px;
+          padding: 12px 20px;
           background: #3b82f6;
           color: white;
           border: none;
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
+          margin-left: 10px;
         }
 
         button:hover {
           opacity: 0.9;
         }
 
-        pre {
-          margin-top: 20px;
+        #roadmap {
+          margin-top: 30px;
+        }
+
+        .card {
           background: #1e293b;
           padding: 20px;
-          border-radius: 10px;
-          white-space: pre-wrap;
+          margin-bottom: 20px;
+          border-radius: 12px;
         }
+
+        .timeline {
+          color: #93c5fd;
+          margin-top: 10px;
+        }
+
+        ul {
+          margin-top: 5px;
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<h2>AI Career Planner</h2>
+<h1>AI Career Planner</h1>
 
 <input
         id="goal"
@@ -62,7 +76,7 @@
     Generate Plan
 </button>
 
-<pre id="output"></pre>
+<div id="roadmap"></div>
 
 <script>
 
@@ -77,8 +91,55 @@
 
       const data = await res.json();
 
-      document.getElementById("output").innerText =
-        data.response;
+      renderRoadmap(data);
+    }
+
+    function renderRoadmap(data) {
+
+      const roadmap =
+        document.getElementById("roadmap");
+
+      roadmap.innerHTML = "";
+
+      const title =
+        document.createElement("h2");
+
+      title.innerText =
+        data.goal;
+
+      roadmap.appendChild(title);
+
+      data.phases.forEach(phase => {
+
+        const card =
+          document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+          <h3>${phase.phase_name}</h3>
+
+          <p><strong>Skills:</strong></p>
+          <ul>
+            ${phase.skills.map(
+              skill => `<li>${skill}</li>`
+            ).join("")}
+          </ul>
+
+          <p><strong>Projects:</strong></p>
+          <ul>
+            ${phase.projects.map(
+              project => `<li>${project}</li>`
+            ).join("")}
+          </ul>
+
+          <p class="timeline">
+            Timeline: ${phase.timeline}
+          </p>
+        `;
+
+        roadmap.appendChild(card);
+      });
     }
 
 </script>
