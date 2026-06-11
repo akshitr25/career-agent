@@ -45,7 +45,9 @@ def get_response(user_input):
 
     critique = critique_response.choices[0].message.content
 
+    roadmap_json = json.loads(roadmap)
+
     return {
-        "roadmap": json.loads(roadmap),
+        **roadmap_json,
         "critique": critique
     }
